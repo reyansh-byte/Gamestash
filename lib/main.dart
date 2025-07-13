@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gamestash/Loading_Animate.dart';
 import 'package:gamestash/splash_screen.dart';
 
 void main() {
