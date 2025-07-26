@@ -72,7 +72,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                     child: TextField(
                       decoration: InputDecoration(
                         hintText: 'Email',
-                        hintStyle: TextStyle(color: Colors.grey[400]),
+                        hintStyle: TextStyle(color: Colors.white),
                         filled: true,
                         fillColor: Color(0xFF2a2a2a),
                         border: OutlineInputBorder(
@@ -83,6 +83,7 @@ class _ForgetPasswordState extends State<ForgetPassword> {
                       style: GoogleFonts.orbitron(
                         color: Colors.white,
                         fontSize: 19,
+                        fontWeight: FontWeight.bold,
                       ),
                       keyboardType: TextInputType.emailAddress,
                     ),

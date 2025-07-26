@@ -11,6 +11,8 @@ dependencies:
     sdk: flutter
   google_fonts: ^6.2.0
   curved_navigation_bar: ^1.0.6
+  firebase_core: ^3.15.2
+  firebase_auth: ^5.7.0
 
 dev_dependencies:
   flutter_test:

@@ -48,7 +48,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Email',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    hintStyle: TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Color(0xFF2a2a2a),
                     border: OutlineInputBorder(
@@ -59,6 +59,7 @@ class _LoginPageState extends State<LoginPage> {
                   style: GoogleFonts.orbitron(
                     color: Colors.white,
                     fontSize: 19,
+                    fontWeight: FontWeight.bold,
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
@@ -70,7 +71,7 @@ class _LoginPageState extends State<LoginPage> {
                 child: TextField(
                   decoration: InputDecoration(
                     hintText: 'Password',
-                    hintStyle: TextStyle(color: Colors.grey[400]),
+                    hintStyle: TextStyle(color: Colors.white),
                     filled: true,
                     fillColor: Color(0xFF2a2a2a),
                     border: OutlineInputBorder(
@@ -81,62 +82,69 @@ class _LoginPageState extends State<LoginPage> {
                   style: GoogleFonts.orbitron(
                     color: Colors.white,
                     fontSize: 19,
+                    fontWeight: FontWeight.bold,
                   ),
                   keyboardType: TextInputType.emailAddress,
                 ),
               ),
               SizedBox(height: 22),
-              SizedBox(
-                width: 319,
-                height: 63,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Color(0xFF00FF66),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(999),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                SizedBox(
+                  width: 151,
+                  height: 63,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF00FF66),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      textStyle: GoogleFonts.orbitron(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    textStyle: GoogleFonts.orbitron(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Homepage()),
+                      );
+                    },
+                    child: Text("Log in"),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Homepage()),
-                    );
-                  },
-                  child: Text("Log in"),
                 ),
-              ),
-              SizedBox(height: 22),
-              SizedBox(
-                width: 319,
-                height: 63,
-                child: TextButton(
-                  style: TextButton.styleFrom(
-                    backgroundColor: Color(0xFF00FF66),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(999),
+                SizedBox(width: 13,),
+
+                SizedBox(
+                  width: 151,
+                  height: 63,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Color(0xFF00FF66),
+                      foregroundColor: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      textStyle: GoogleFonts.orbitron(
+                        color: Colors.white,
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    textStyle: GoogleFonts.orbitron(
-                      color: Colors.white,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                    ),
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => SignUp()),
+                      );
+                    },
+                    child: Text("Sign Up"),
                   ),
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => SignUp()),
-                    );
-                  },
-                  child: Text("Sign Up"),
                 ),
-              ),
+              ],),
+
               SizedBox(height: 22),
               SizedBox(
                 width: 319,
