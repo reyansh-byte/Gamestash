@@ -29,59 +29,60 @@ class _LoginPageState extends State<LoginPage> {
         MaterialPageRoute(builder: (context) => const Homepage()),
       );
     } on FirebaseAuthException catch (e) {
-      String errorMessage;
-
-      switch (e.code) {
-        case 'invalid-email':
-          errorMessage = 'The email address is badly formatted.';
-          break;
-        case 'user-disabled':
-          errorMessage = 'This user account has been disabled.';
-          break;
-        case 'user-not-found':
-          errorMessage = 'No user found for that email. Please sign up.';
-          break;
-        case 'wrong-password':
-          errorMessage = 'Incorrect password. Please try again.';
-          break;
-        case 'too-many-requests':
-          errorMessage = 'Too many login attempts. Try again later.';
-          break;
-        case 'operation-not-allowed':
-          errorMessage = 'Email/password accounts are not enabled.';
-          break;
-        default:
-          errorMessage = 'Login failed. Please check your credentials.';
+      if (e.code == 'invalid-email') {
+        _showErrorDialog('Invalid Email Format', 'Please enter a valid email address.');
+      } else if (e.code == 'user-not-found') {
+        _showErrorDialog('User Not Found', 'No account exists with this email. Please sign up.');
+      } else if (e.code == 'wrong-password') {
+        _showErrorDialog('Incorrect Password', 'The password you entered is incorrect.');
+      } else if (e.code == 'user-disabled') {
+        _showErrorDialog('Account Disabled', 'This account has been disabled. Contact support.');
+      } else if (e.code == 'too-many-requests') {
+        _showErrorDialog('Too Many Attempts', 'Too many login attempts. Please try again later.');
+      } else if (e.code == 'operation-not-allowed') {
+        _showErrorDialog('Login Not Allowed', 'Email/password login is not enabled for this app.');
+      } else {
+        _showErrorDialog('Login Error', e.message ?? 'An unknown error occurred.');
       }
-
-      _showErrorDialog(errorMessage);
     } catch (e) {
-      _showErrorDialog('An unexpected error occurred. Please try again.');
+      _showErrorDialog('Unexpected Error', 'Something went wrong. Please try again.');
     }
   }
-
-  void _showErrorDialog(String message) {
+  void _showErrorDialog(String title, String message) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: Colors.grey[900],
-        title: const Text(
-          'Login Failed',
-          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          title,
+          style: GoogleFonts.orbitron(
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         content: Text(
           message,
-          style: const TextStyle(color: Colors.white),
+          style: GoogleFonts.orbitron(
+            color: Colors.white,
+            fontSize: 14,
+          ),
         ),
         actions: [
           TextButton(
-            child: const Text('OK', style: TextStyle(color: Color(0xFF00FF66))),
             onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: GoogleFonts.orbitron(
+                color: const Color(0xFF00FF66),
+              ),
+            ),
           ),
         ],
       ),
     );
   }
+
 
   @override
   Widget build(BuildContext context) {

@@ -13,7 +13,6 @@ class SignUp extends StatefulWidget {
 class _SignUpState extends State<SignUp> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
   bool _isLoading = false;
 
   @override
@@ -23,10 +22,35 @@ class _SignUpState extends State<SignUp> {
     super.dispose();
   }
 
+  void _showErrorDialog(String message) {
+    showDialog(
+      context: context,
+      builder: (_) => AlertDialog(
+        backgroundColor: Colors.black,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+        title: Text(
+          'Error',
+          style: GoogleFonts.orbitron(color: Colors.redAccent),
+        ),
+        content: Text(
+          message,
+          style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: Text(
+              'OK',
+              style: GoogleFonts.orbitron(color: Color(0xFF00FF66)),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   Future<void> _signUp() async {
-    setState(() {
-      _isLoading = true;
-    });
+    setState(() => _isLoading = true);
 
     try {
       await FirebaseAuth.instance.createUserWithEmailAndPassword(
@@ -34,34 +58,64 @@ class _SignUpState extends State<SignUp> {
         password: _passwordController.text.trim(),
       );
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Account created successfully!')),
-      );
-
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => LoginPage()),
+      showDialog(
+        context: context,
+        builder: (_) => AlertDialog(
+          backgroundColor: Colors.black,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
+          title: Text(
+            'Success',
+            style: GoogleFonts.orbitron(color: Color(0xFF00FF66)),
+          ),
+          content: Text(
+            'Account created successfully!',
+            style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                Navigator.pushReplacement(
+                  context,
+                  MaterialPageRoute(builder: (context) => const LoginPage()),
+                );
+              },
+              child: Text(
+                'OK',
+                style: GoogleFonts.orbitron(color: Color(0xFF00FF66)),
+              ),
+            ),
+          ],
+        ),
       );
     } on FirebaseAuthException catch (e) {
       String errorMessage;
 
-      if (e.code == 'email-already-in-use') {
-        errorMessage = 'Email already in use.';
-      } else if (e.code == 'invalid-email') {
-        errorMessage = 'Invalid email address.';
-      } else if (e.code == 'weak-password') {
-        errorMessage = 'Password should be at least 6 characters.';
-      } else {
-        errorMessage = 'Sign up failed. Please try again.';
+      switch (e.code) {
+        case 'email-already-in-use':
+          errorMessage = 'This email is already in use.';
+          break;
+        case 'invalid-email':
+          errorMessage = 'The email address is badly formatted.';
+          break;
+        case 'weak-password':
+          errorMessage = 'Password must be at least 6 characters.';
+          break;
+        case 'operation-not-allowed':
+          errorMessage = 'Email/password sign-up is not enabled.';
+          break;
+        case 'too-many-requests':
+          errorMessage = 'Too many attempts. Try again later.';
+          break;
+        default:
+          errorMessage = 'Sign up failed. Please try again.';
       }
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text(errorMessage)),
-      );
+      _showErrorDialog(errorMessage);
+    } catch (e) {
+      _showErrorDialog('An unexpected error occurred. Please try again.');
     } finally {
-      setState(() {
-        _isLoading = false;
-      });
+      setState(() => _isLoading = false);
     }
   }
 
@@ -82,11 +136,7 @@ class _SignUpState extends State<SignUp> {
                   borderRadius: BorderRadius.circular(999),
                 ),
                 child: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back,
-                    color: Colors.white,
-                    size: 30,
-                  ),
+                  icon: const Icon(Icons.arrow_back, color: Colors.white, size: 30),
                   onPressed: () {
                     Navigator.pushReplacement(
                       context,
@@ -107,16 +157,8 @@ class _SignUpState extends State<SignUp> {
                       fontSize: 36,
                       fontWeight: FontWeight.bold,
                       shadows: const [
-                        Shadow(
-                          color: Color(0xFF00FF66),
-                          blurRadius: 10,
-                          offset: Offset(0, 0),
-                        ),
-                        Shadow(
-                          color: Color(0xFF00FF66),
-                          blurRadius: 20,
-                          offset: Offset(0, 0),
-                        ),
+                        Shadow(color: Color(0xFF00FF66), blurRadius: 10),
+                        Shadow(color: Color(0xFF00FF66), blurRadius: 20),
                       ],
                     ),
                   ),
@@ -186,9 +228,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       onPressed: _isLoading ? null : _signUp,
                       child: _isLoading
-                          ? const CircularProgressIndicator(
-                        color: Colors.black,
-                      )
+                          ? const CircularProgressIndicator(color: Colors.black)
                           : const Text("Sign Up"),
                     ),
                   ),
