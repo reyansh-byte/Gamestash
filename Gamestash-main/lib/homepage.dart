@@ -12,6 +12,7 @@ class Homepage extends StatefulWidget {
 
 class _HomepageState extends State<Homepage> {
   int _currentIndex = 0;
+  final TextEditingController _noteController = TextEditingController();
 
   final List<_NavItemData> _navItems = [
     _NavItemData('assets/home.png', 'Home'),
@@ -23,64 +24,100 @@ class _HomepageState extends State<Homepage> {
   Widget getPage(int index) {
     switch (index) {
       case 0:
-        return _buildTestPage();
+        return _buildHomePage();
+      case 1:
+        return _buildPlaceholderPage('Discover Page');
+      case 2:
+        return _buildPlaceholderPage('Games Page');
+      case 3:
+        return _buildPlaceholderPage('Profile Page');
       default:
-        return _buildTestPage();
+        return _buildHomePage();
     }
   }
 
-  Future<void> _sendHelloToFirestore() async {
+  Widget _buildPlaceholderPage(String title) {
+    return Center(
+      child: Text(
+        title,
+        style: GoogleFonts.orbitron(
+          fontSize: 22,
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+    );
+  }
+
+  Future<void> _saveNoteToFirestore() async {
+    final note = _noteController.text.trim();
+    if (note.isEmpty) return;
+
     try {
-      await FirebaseFirestore.instance.collection('test').add({
-        'message': 'Hello Firestore!',
+      await FirebaseFirestore.instance.collection('notes').add({
+        'note': note,
         'timestamp': FieldValue.serverTimestamp(),
       });
-
-      _showDialog('Success', 'Message saved to Firestore.', Colors.greenAccent);
+      _noteController.clear();
+      _showDialog('Success', 'Note saved to Firestore.', Colors.greenAccent);
     } catch (e) {
-      _showDialog('Error', 'Failed to save message: $e', Colors.redAccent);
+      _showDialog('Error', 'Failed to save note: $e', Colors.redAccent);
     }
   }
 
-  Widget _buildTestPage() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              'Firestore Test',
-              style: GoogleFonts.orbitron(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
+  Widget _buildHomePage() {
+    return SingleChildScrollView(
+      padding: const EdgeInsets.all(20),
+      child: Column(
+        children: [
+          const SizedBox(height: 50),
+          Text(
+            'Save a Note',
+            style: GoogleFonts.orbitron(
+              fontSize: 24,
+              color: Colors.white,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(height: 20),
+          TextField(
+            controller: _noteController,
+            maxLines: 5,
+            style: const TextStyle(color: Colors.white),
+            decoration: InputDecoration(
+              hintText: 'Type your note here...',
+              hintStyle: const TextStyle(color: Colors.grey),
+              filled: true,
+              fillColor: Colors.grey[900],
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(15),
+                borderSide: const BorderSide(color: Colors.white),
               ),
             ),
-            const SizedBox(height: 30),
-            SizedBox(
-              width: double.infinity,
-              child: ElevatedButton(
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF00C851),
-                  padding: const EdgeInsets.symmetric(vertical: 14),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+          ),
+          const SizedBox(height: 20),
+          SizedBox(
+            width: double.infinity,
+            child: ElevatedButton(
+              onPressed: _saveNoteToFirestore,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: const Color(0xFF00C851),
+                padding: const EdgeInsets.symmetric(vertical: 14),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(12),
                 ),
-                onPressed: _sendHelloToFirestore,
-                child: Text(
-                  'Send Hello to Firestore',
-                  style: GoogleFonts.orbitron(
-                    color: Colors.black,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16,
-                  ),
+              ),
+              child: Text(
+                'Save Note',
+                style: GoogleFonts.orbitron(
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                  fontSize: 16,
                 ),
               ),
             ),
-          ],
-        ),
+          )
+        ],
       ),
     );
   }
@@ -186,6 +223,5 @@ class _HomepageState extends State<Homepage> {
 class _NavItemData {
   final String iconPath;
   final String label;
-
   const _NavItemData(this.iconPath, this.label);
 }
