@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "952879456712",
+    "project_id": "gamestash-6f478",
+    "storage_bucket": "gamestash-6f478.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:952879456712:android:41afe96c59e15a612be0fd",
+        "android_client_info": {
+          "package_name": "com.example.gamestash"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDdYGi9MUhPyhmHfpLBR7ePT37CgWBex8w"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
